@@ -10,6 +10,7 @@ import {
     IconButton,
     MenuItem,
     Stack,
+    Switch,
     TextField,
     Tooltip,
 } from '@mui/material';
@@ -20,6 +21,7 @@ const Customers = () => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [tableData, setTableData] = useState(() => data);
     const [validationErrors, setValidationErrors] = useState({});
+    const [checked, setChecked] = useState(true);
 
     const handleCreateNewRow = (values) => {
         tableData.push(values);
@@ -41,6 +43,7 @@ const Customers = () => {
 
     const handleDeleteRow = useCallback(
         (row) => {
+
             if (
                 !confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
             ) {
@@ -49,6 +52,7 @@ const Customers = () => {
             //send api delete request here, then refetch or update local table data for re-render
             tableData.splice(row.index, 1);
             setTableData([...tableData]);
+            setChecked(event.target.checked)
         },
         [tableData],
     );
@@ -143,6 +147,8 @@ const Customers = () => {
         [getCommonEditTextFieldProps],
     );
 
+    const label = { inputProps: { 'aria-label': 'Switch' } };
+
     return (
         <>
             <h1>Customers</h1>
@@ -170,9 +176,10 @@ const Customers = () => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip arrow placement="right" title="Delete">
-                            <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                            {/* <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                                 <Delete />
-                            </IconButton>
+                            </IconButton> */}
+                            <Switch inputProps={{ 'aria-label': 'controlled' }} checked={checked} onChange={() => handleDeleteRow(row)} defaultChecked />
                         </Tooltip>
                     </Box>
                 )}
